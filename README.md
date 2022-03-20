@@ -1,54 +1,81 @@
-### Factory Methodパターン
-- インスタンスの生成をサブクラスに任せる。
+### Abstracut Factoryクラス
+    - 関連したり依存し合うオブジェクト群のインスタンスを生成することができる。
+    - 別名「Kit」とも呼ばれる。
 
-1. メリット 
-     - どのインスタンスを生成すれば良いのかをサブクラスに任せられる。
-     - インスタンス生成の処理を1箇所にまとめられる。
 
-2. 利用シーン・メリット
-    a. 生成しなければいけないインスタンスを事前に把握できない場合
-      - factoryメソッドがインスタンス生成を一手に引き受けてくれることで、そのサブクラスを生成すれば良いのか、判断する必要がなくなる。（if文などで生成する場合）
+1. 利用シーン・メリット
 
-    b. インスタンス生成時やその前後で、何らかあの処理をさあせたい場合
-      - Template Methodパターンを利用してインスタンスを生成することによって、インスタンス生成時の前後に何らかの処理を入れることもできる。
-      - 全てのインスタンスをnewで作成している場合、因子タンス生成の前後に何らかの処理を入れたいとなった場合の修正量が膨大になってしまう可能性がある。 
+   - Abstract Factoryパターンは以下のような場合に利用する。
+   - Product（部品）が複数存在する場合
+   - Product（部品）が拡張する可能性がある場合
+   - 実行環境（OS、DB、プラットフォーム、バージョンなど）に追加や変更が生じる場合
+
+
+2. 注意点、問題点
+
+   - OsSoundSystemという音響システムの部品を追加しようとした場合、 AbstractFactorクラスにcreateSoundメソッドを追加する必要がある。
+   つまり、サブクラス全てにcreateSoundメソッドを追加するということである。
+   そのため、生成する部品についてもあらかじめ網羅しておくと、後々の保守が楽になる。
+
 
 3. 他のパターンとの関連
-   a. Template Methodパターン
-     - Factoryクラス内でインスタンス生成する際に、Templeteメソッドパターンが利用されることがある。
 
-   b. Singketonパターン
-      - Factoryクラス、またはそのサブクラスはSingletonパターンで作られることがある。
+    a. Singletonパターン
+      - ConCreate Factoryクラスは通常、1つだけ生成すれば良いため、Singletonパターンが利用されることがある。
 
-    c. Compositeパターン
-      - Productクラス、ConcreteProductクラスにCompositeのパターンを当てはめることができる。
+    b. Prototypeパターン
+      - ConcreateProductクラスを生成する際に、Propertyパターンでインスタンスを生成する必要がある。
 
-    d. Iteratorパターン
-      - Iteratoのインスタンスを生成する際に、Factory Methodパターンを利用することがある。
+    c. Factory Methodパターン
+      - ConCreateFactoryクラスでは、FactoryMethodパターンを利用して、ConcreateProductを生成する。
 
 
-4. Factory
-    工場の抽象クラス。
-    Productの生成と登録用の抽象メソッドを定義する。
-    creaateメソッドは、それらを利用したテンプレートメソッド。
+4. サンプルコードの解説
 
-5. Product
-    製品の抽象クラス。
-    全ての製品はuse（利用）することができる、と定義している。
+   a. AbstractProduct
+        抽象的な部品。
+        このクラスで部品のインターフェースを定義しておく。
+        今回の実装では、OsFileSystemがこれに該当する。
 
-6. PcFactory
-    Factoryクラスを継承したパソコンの工場クラス。
-    reateProductメソッドでPcのクラスのインスタンスを生成する。
+    b. ConcreateFactory
+        具体的な工場。
+        このクラスから、具体的な部品（ConcreateProduct）を生成する。
+        今回の実装では、WindowsFactory、LinuxFactoryクラスがこれに該当する。
 
-7. createProductメソッド
-    Pcクラスのインスタンスを生成する
+    c. ConcreateProduct
+        具体的な部品で、このクラス内で処理を実装する。
+        今回の実装では、WindowsDisplaySystem、WindowsFileSystem、LinuxDisplaySystem、LinuxFileSystemクラスがこれに該当する。
+        - ファイルセパレータ（/や¥）の取得
+        - ルートパスの取得
+        - ファイルの保存
 
-8. registerProducメソッド
-    シリアルナンバーのリストにPcクラスのインスタンスを登録する
+    d. WindowsFactory
+        Windows用システムの工場。
+        Windows用のディスプレイシステム、ファイルシステムのインスタンスを生成するメソッドを実装する。
 
-9. getSerialNumberList
-    シリアルナンバーのリストを登録する
+    e. WindowsDisplaySystem
+         Windows用のディスプレイシステム。
+         OsDisplaySystemクラスの中小メソッドを実装する。 
 
-10. Pc
-    パソコンを表現するクラス。
-    パソコンは自分自身のシリアルナンバーをフィールドとして持っている。
+    f. WindowsFileSystem
+        Windows用のファイルシステム。
+        OsFileSystemクラスの抽象メソッドを実装する。
+
+    g. LinuxFactory
+        Linux用システムの工場。
+        Linux用ディスプレイシステム、ファイルシステムのインスタンスを生成するメソッドを実装する。 
+
+    h. LinuxDisplaySystem
+        Linux用のディスプレイシステム。
+        OsDisplay Systemクラスの抽象メソッドを実装する。
+        
+    i. LinuxFileSystem
+        Linux用ファイルシステム。
+        OsFileSystemクラスの抽象メソッドを実装する。
+
+5. まとめ
+
+   - 複数のサブクラス群をまとめて変更したい場合、AbstractFactoryパターンを利用する。
+   - Factoryクラス、Productクラスを抽象化する（インターフェースは決めておく）。
+   - Factorクラスに、Factoryのサブクラスのインスタンスを生成するstatic、メソッドを用意する。
+

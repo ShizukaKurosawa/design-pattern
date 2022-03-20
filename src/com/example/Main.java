@@ -1,28 +1,27 @@
 package com.example;
 
-import com.example.factory.Factory;
-import com.example.factory.Product;
-import com.example.pc.PcFactory;
+import com.example.factory.OsDisplaySystem;
+import com.example.factory.OsFactory;
+import com.example.factory.OsFileSystem;
 
 public class Main {
 	
 	public static void main(String[] args) {
 		
-//		Factoryインスタンスの生成
-		Factory factory = new PcFactory();
+//		クラス名
+		String className = "com.exampl.faactory.Windows.WindowsFaactory";
 		
-//		Productを作る
-		Product pc1 = factory.create("A001");
-		Product pc2 = factory.create("A002");
-		Product pc3 = factory.create("A003");
+//		Factory生成
+		OsFactory factory = OsFactory.getFactory(className);
 		
-//		改行
-		System.out.println();
+//		DisplaySystem生成
+		OsDisplaySystem displaySystem = factory.createDisplaySystem();
+		displaySystem.displayOsName();
+		displaySystem.displayStr("サンプル");
 		
-//		Productを使う
-		pc1.use();
-		pc2.use();
-		pc3.use();
-		
+//		FileSystem生成
+		OsFileSystem fileSystem = factory.createFileSystem();
+		fileSystem.saveFile("sample.txt");
 	}
+	
 }
