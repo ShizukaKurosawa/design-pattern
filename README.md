@@ -38,6 +38,24 @@ cloneメソッドには1つ問題がある。<br>
 
 4. サンプルコードの解説
 
+  - Manager<br>
+    Prototype（原型）を管理しておくクラス。<br>
+
+  - Item<br>
+    アイテムのProperty（原型）。これはJavaのインターフェースで作成する。<br>
+    Itemは獲得（get）と利用する（use）ことができる、と定義している。<br>
+
+  - Potion<br>
+    回復アイテムのポーションを表すクラス。<br>
+
+  - Sword<br>
+    攻撃アイテムの剣を表すクラス。<br>
+
+  - Main<br>
+    Managerクラスを通して、Itemクラスのクローンを生成する。<br>
+
+Propertyパターンでは、以下クラスを作成する。<br>
+
   - Client<br>
     Prototypeにクローン生成を依頼する。<br>
     Managerクラスがこれに該当する。<br>
